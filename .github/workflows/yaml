@@ -1,0 +1,40 @@
+# Nombre del flujo de trabajo
+name: Deploy to GitHub Pages
+
+# Especifica cuándo se ejecutará el flujo de trabajo
+on:
+  push:
+    branches: [ "master" ]  # Ejecuta el flujo cuando hay un push en la rama master
+  workflow_dispatch:        # Permite ejecutar el flujo manualmente desde GitHub
+
+# Configuración de los trabajos (jobs) del flujo de trabajo
+jobs:
+  deploy:
+    runs-on: ubuntu-latest   # Usaremos el último entorno de Ubuntu
+
+    steps:
+      # Paso 1: Clonar el repositorio
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar Node.js (opcional, si necesitas ejecutar npm para build)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Paso 3: Construir el proyecto (opcional)
+      # Si tu proyecto necesita un comando de build como `npm run build`, agrégalo aquí
+      - name: Build project
+        run: |
+          npm install   # Instala dependencias (si tienes un package.json)
+          npm run build # Ejecuta la compilación (asegúrate de tener un script de build en package.json)
+
+      # Paso 4: Desplegar el contenido de la carpeta "web" a la rama gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./web  # Especifica que la carpeta web será la que se desplegará
+          destination_branch: gh-pages  # Despliega a la rama gh-pages
+          keep_files: true  # Mantiene los archivos previos (opcional)
