@@ -67,7 +67,7 @@
                 var username = document.getElementById('username').value;
                 var password = document.getElementById('password').value;
 
-                fetch('login/users.json')
+                fetch('web/login/users.json')
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('No se responde ' + response.statusText);
@@ -78,7 +78,7 @@
                             var isValidUser = users.some(user => user.username === username && user.password === password);
 
                             if (isValidUser) {
-                                window.location.href = 'login/restaurante.html';
+                                window.location.href = 'web/login/restaurante.html';
                             } else {
                                 document.getElementById('error').textContent = 'Nombre de usuario o contraseña incorrectos';
                             }
